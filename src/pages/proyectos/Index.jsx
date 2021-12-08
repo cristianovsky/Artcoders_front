@@ -7,7 +7,7 @@ import { useMutation, useQuery, ApolloError } from '@apollo/client';
 import { PROYECTOS } from 'graphql/proyectos/queries';
 import DropDown from 'components/Dropdown';
 import { Dialog } from '@mui/material';
-import { Enum_EstadoProyecto } from 'utils/enums';
+import { Enum_EstadoProyecto,Enum_FaseProyecto } from 'utils/enums';
 import ButtonLoading from 'components/ButtonLoading';
 import { EDITAR_PROYECTO } from 'graphql/proyectos/mutations';
 import useFormData from 'hooks/useFormData';
@@ -64,7 +64,7 @@ const AccordionProyecto = ({ proyecto }) => {
         <AccordionSummaryStyled expandIcon={<i className='fas fa-chevron-down' />}>
           <div className='flex w-full justify-between'>
             <div className='uppercase font-bold text-gray-100 '>
-              {proyecto.nombre} - {proyecto.estado}
+              {proyecto.nombre} - {proyecto.estado} - {proyecto.fase}
             </div>
           </div>
         </AccordionSummaryStyled>
@@ -99,6 +99,7 @@ const AccordionProyecto = ({ proyecto }) => {
 
 const FormEditProyecto = ({ _id }) => {
   const { form, formData, updateFormData } = useFormData();
+  
   const [editarProyecto, { data: dataMutation, loading, error }] = useMutation(EDITAR_PROYECTO);
 
   const submitForm = (e) => {
@@ -106,10 +107,12 @@ const FormEditProyecto = ({ _id }) => {
     editarProyecto({
       variables: {
         _id,
-        campos: formData,
+        campos:formData,
       },
     });
+    console.log(formData)
   };
+
 
   useEffect(() => {
     console.log('data mutation', dataMutation);
@@ -117,17 +120,19 @@ const FormEditProyecto = ({ _id }) => {
 
   return (
     <div className='p-4'>
-      <h1 className='font-bold'>Modificar Estado del Proyecto</h1>
+    <h1 className='font-bold'>Modificar Estado del Proyecto</h1>
       <form
         ref={form}
         onChange={updateFormData}
         onSubmit={submitForm}
         className='flex flex-col items-center'
       >
-        <DropDown label='Estado del Proyecto' name='estado' options={Enum_EstadoProyecto} />
-        <ButtonLoading disabled={false} loading={loading} text='Confirmar' />
+        <DropDown label='Estado del Proyecto' name='estado' options={Enum_EstadoProyecto} /> 
+        <DropDown label='Fase del Proyecto' name='fase' options={Enum_FaseProyecto} /> 
+        <ButtonLoading disabled={false} loading={loading} text='Confirmar' /> 
       </form>
     </div>
+  
   );
 };
 
