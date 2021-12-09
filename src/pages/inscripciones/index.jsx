@@ -13,11 +13,15 @@ import {
 
 const IndexInscripciones = () => {
   const { data, loading, error, refetch } = useQuery(GET_INSCRIPCIONES);
+  
 
   useEffect(() => {
     console.log(data);
   }, [data]);
   if (loading) return <div>Loading...</div>;
+
+ 
+
   return (
     <PrivateRoute roleList={[ 'LIDER']}>
       <div className='p-10'>
