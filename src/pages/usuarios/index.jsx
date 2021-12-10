@@ -24,7 +24,7 @@ const { data, error, loading } = useQuery((userData.rol ==='ADMINISTRADOR')?GET_
   return (
     <PrivateRoute roleList={userData.rol}>
       <div>
-        Datos Usuarios:
+       <h1 class="text-center text-3xl font-extrabold text-indigo-700">Datos Usuarios</h1>
         <table className='tabla'>
           <thead>
             <tr>
@@ -51,7 +51,7 @@ const { data, error, loading } = useQuery((userData.rol ==='ADMINISTRADOR')?GET_
                       <td>{Enum_EstadoUsuario[u.estado]}</td>
                       <td>
                         <Link to={`/usuarios/editar/${u._id}`}>
-                          <i className='fas fa-pen text-yellow-600 hover:text-yellow-400 cursor-pointer' />
+                        <button class="h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800">{<i class="fas fa-edit"></i>}</button>
                         </Link>
                       </td>
                     </tr>
@@ -70,7 +70,7 @@ const { data, error, loading } = useQuery((userData.rol ==='ADMINISTRADOR')?GET_
                       <td>{Enum_EstadoUsuario[u.estado]}</td>
                       <td>
                         <Link to={`/usuarios/editar/${u._id}`}>
-                          <i className='fas fa-pen text-yellow-600 hover:text-yellow-400 cursor-pointer' />
+                        <button class="h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800">Edit</button>
                         </Link>
                       </td>
                     </tr>
