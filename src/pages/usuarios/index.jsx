@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
+import { useUser } from 'context/userContext';
 import { useQuery } from '@apollo/client';
 import { GET_USUARIOS } from 'graphql/usuarios/queries';
+import { GET_USUARIOSNOPENDIENTE } from 'graphql/usuarios/queries';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
 import { Enum_Rol, Enum_EstadoUsuario } from 'utils/enums';
 import PrivateRoute from 'components/PrivateRoute';
 
 const IndexUsuarios = () => {
-  const { data, error, loading } = useQuery(GET_USUARIOS);
+const {userData} = useUser();
+const { data, error, loading } = useQuery((userData.rol ==='ADMINISTRADOR')?GET_USUARIOS:GET_USUARIOSNOPENDIENTE)
+
 
   useEffect(() => {
     if (error) {
@@ -18,7 +22,7 @@ const IndexUsuarios = () => {
   if (loading) return <div>Cargando....</div>;
 
   return (
-    <PrivateRoute roleList={['ADMINISTRADOR']}>
+    <PrivateRoute roleList={userData.rol}>
       <div>
         Datos Usuarios:
         <table className='tabla'>
@@ -34,7 +38,7 @@ const IndexUsuarios = () => {
             </tr>
           </thead>
           <tbody>
-            {data && data.Usuarios ? (
+            {userData.rol==='ADMINISTRADOR' ? (
               <>
                 {data.Usuarios.map((u) => {
                   return (
@@ -54,9 +58,26 @@ const IndexUsuarios = () => {
                   );
                 })}
               </>
-            ) : (
-              <div>No autorizado</div>
-            )}
+            ) : ( <>
+            {data.UsuariosNoPendiente.map((u) => {
+                  return (
+                    <tr key={u._id}>
+                      <td>{u.nombre}</td>
+                      <td>{u.apellido}</td>
+                      <td>{u.correo}</td>
+                      <td>{u.identificacion}</td>
+                      <td>{Enum_Rol[u.rol]}</td>
+                      <td>{Enum_EstadoUsuario[u.estado]}</td>
+                      <td>
+                        <Link to={`/usuarios/editar/${u._id}`}>
+                          <i className='fas fa-pen text-yellow-600 hover:text-yellow-400 cursor-pointer' />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
+            
+            </>)}
           </tbody>
         </table>
       </div>
@@ -64,4 +85,8 @@ const IndexUsuarios = () => {
   );
 };
 
+
+
 export default IndexUsuarios;
+
+
