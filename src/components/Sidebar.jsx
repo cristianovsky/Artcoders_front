@@ -7,10 +7,10 @@ const SidebarLinks = () => {
   return (
     <ul className='mt-12'>
       <SidebarRoute to='' title='Inicio' icon='fas fa-home' />
-      <PrivateComponent roleList={['ADMINISTRADOR']}>
+      <PrivateComponent roleList={['ADMINISTRADOR', 'LIDER']}>
         <SidebarRoute to='/usuarios' title='Usuarios' icon='fas fa-user' />
       </PrivateComponent>
-      <SidebarRoute to='/proyectos' title='Proyectos' icon='fas fa-smile-wink' />
+      <SidebarRoute to='/proyectos' title='Proyectos' icon='fas fa-project-diagram' />
       <PrivateComponent roleList={['ADMINISTRADOR', 'LIDER']}>
         <SidebarRoute to='/inscripciones' title='Aprobacion Inscripciones' icon='fas fa-user' />
       </PrivateComponent >
@@ -18,7 +18,7 @@ const SidebarLinks = () => {
       <SidebarRoute to='/page2' title='Pagina2' icon='fas fa-smile-wink' />
       </PrivateComponent>
       <PrivateComponent roleList={['LIDER']}>
-        <SidebarRoute to='/category1' title='Mis proyectos' icon='fas fa-smile-wink' />
+        <SidebarRoute to='/category1' title='Mis proyectos' icon='fas fa-tasks' />
       </PrivateComponent>
       <SidebarRoute to='/category1/page1' title='Test' icon='fas fa-car' />
       <Logout />
