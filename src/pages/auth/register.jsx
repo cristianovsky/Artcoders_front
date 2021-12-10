@@ -33,7 +33,9 @@ const Register = () => {
   }, [dataMutation, setToken, navigate]);
 
   return (
+    <div class="bg-gradient-to-r from-yellow-200 via-red-200 to-pink-200 w-full h-full">
     <div className='flex flex-col h-full w-full items-center justify-center'>
+
       <h1 className='text-3xl font-bold my-4'>Regístrate</h1>
       <form className='flex flex-col' onSubmit={submitForm} onChange={updateFormData} ref={form}>
         <div className='grid grid-cols-2 gap-5'>
@@ -54,6 +56,7 @@ const Register = () => {
       <Link to='/auth/login'>
         <span className='text-blue-700'>Inicia sesión</span>
       </Link>
+    </div>
     </div>
   );
 };

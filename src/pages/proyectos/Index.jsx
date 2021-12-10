@@ -1,28 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import { styled } from '@mui/material/styles';
 import { useMutation, useQuery, ApolloError } from '@apollo/client';
 import { PROYECTOS } from 'graphql/proyectos/queries';
 import DropDown from 'components/Dropdown';
 import { Dialog } from '@mui/material';
-import { Enum_EstadoProyecto } from 'utils/enums';
+import { Enum_EstadoProyecto,Enum_FaseProyecto } from 'utils/enums';
 import ButtonLoading from 'components/ButtonLoading';
 import { EDITAR_PROYECTO } from 'graphql/proyectos/mutations';
 import useFormData from 'hooks/useFormData';
 import PrivateComponent from 'components/PrivateComponent';
 import { Link } from 'react-router-dom';
-
-const AccordionStyled = styled((props) => <Accordion {...props} />)(({ theme }) => ({
-  backgroundColor: '#919191',
-}));
-const AccordionSummaryStyled = styled((props) => <AccordionSummary {...props} />)(({ theme }) => ({
-  backgroundColor: '#919191',
-}));
-const AccordionDetailsStyled = styled((props) => <AccordionDetails {...props} />)(({ theme }) => ({
-  backgroundColor: '#ccc',
-}));
+import { CREAR_INSCRIPCION } from 'graphql/inscripciones/mutaciones';
+import { useUser } from 'context/userContext';
+import { toast } from 'react-toastify';
+import {
+  AccordionStyled,
+  AccordionSummaryStyled,
+  AccordionDetailsStyled,
+} from 'components/Accordion';
 
 const IndexProyectos = () => {
   const { data: queryData, loading, error } = useQuery(PROYECTOS);
@@ -64,7 +58,7 @@ const AccordionProyecto = ({ proyecto }) => {
         <AccordionSummaryStyled expandIcon={<i className='fas fa-chevron-down' />}>
           <div className='flex w-full justify-between'>
             <div className='uppercase font-bold text-gray-100 '>
-              {proyecto.nombre} - {proyecto.estado}
+              {proyecto.nombre} - {proyecto.estado} - {proyecto.fase}
             </div>
           </div>
         </AccordionSummaryStyled>
@@ -75,7 +69,15 @@ const AccordionProyecto = ({ proyecto }) => {
               onClick={() => {
                 setShowDialog(true);
               }}
+              />
+            </PrivateComponent>
+          <PrivateComponent roleList={['ESTUDIANTE']}>
+            <InscripcionProyecto
+              idProyecto={proyecto._id}
+              estado={proyecto.estado}
+              inscripciones={proyecto.inscripciones}
             />
+
           </PrivateComponent>
           <div>Liderado Por: {proyecto.lider.correo}</div>
           <div className='flex'>
@@ -99,6 +101,7 @@ const AccordionProyecto = ({ proyecto }) => {
 
 const FormEditProyecto = ({ _id }) => {
   const { form, formData, updateFormData } = useFormData();
+  
   const [editarProyecto, { data: dataMutation, loading, error }] = useMutation(EDITAR_PROYECTO);
 
   const submitForm = (e) => {
@@ -106,10 +109,12 @@ const FormEditProyecto = ({ _id }) => {
     editarProyecto({
       variables: {
         _id,
-        campos: formData,
+        campos:formData,
       },
     });
+    console.log(formData)
   };
+
 
   useEffect(() => {
     console.log('data mutation', dataMutation);
@@ -117,17 +122,19 @@ const FormEditProyecto = ({ _id }) => {
 
   return (
     <div className='p-4'>
-      <h1 className='font-bold'>Modificar Estado del Proyecto</h1>
+    <h1 className='font-bold'>Modificar Estado del Proyecto</h1>
       <form
         ref={form}
         onChange={updateFormData}
         onSubmit={submitForm}
         className='flex flex-col items-center'
       >
-        <DropDown label='Estado del Proyecto' name='estado' options={Enum_EstadoProyecto} />
-        <ButtonLoading disabled={false} loading={loading} text='Confirmar' />
+        <DropDown label='Estado del Proyecto' name='estado' options={Enum_EstadoProyecto} /> 
+        <DropDown label='Fase del Proyecto' name='fase' options={Enum_FaseProyecto} /> 
+        <ButtonLoading disabled={false} loading={loading} text='Confirmar' /> 
       </form>
     </div>
+  
   );
 };
 
@@ -140,6 +147,47 @@ const Objetivo = ({ tipo, descripcion }) => {
         <div>Editar</div>
       </PrivateComponent>
     </div>
+  );
+};
+
+const InscripcionProyecto = ({ idProyecto, estado, inscripciones }) => {
+  const [estadoInscripcion, setEstadoInscripcion] = useState('');
+  const [crearInscripcion, { data, loading, error }] = useMutation(CREAR_INSCRIPCION);
+  const { userData } = useUser();
+
+  useEffect(() => {
+    if (userData && inscripciones) {
+      const flt = inscripciones.filter((el) => el.estudiante._id === userData._id);
+      if (flt.length > 0) {
+        setEstadoInscripcion(flt[0].estado);
+      }
+    }
+  }, [userData, inscripciones]);
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+      toast.success('inscripcion creada con exito');
+    }
+  }, [data]);
+
+  const confirmarInscripcion = () => {
+    crearInscripcion({ variables: { proyecto: idProyecto, estudiante: userData._id } });
+  };
+
+  return (
+    <>
+      {estadoInscripcion !== '' ? (
+        <span>Ya estas inscrito en este proyecto y el estado es {estadoInscripcion}</span>
+      ) : (
+        <ButtonLoading
+          onClick={() => confirmarInscripcion()}
+          disabled={estado === 'INACTIVO'}
+          loading={loading}
+          text='Inscribirme en este proyecto'
+        />
+      )}
+    </>
   );
 };
 
