@@ -6,6 +6,7 @@ import { ApolloProvider, ApolloClient, createHttpLink, InMemoryCache } from '@ap
 import { setContext } from '@apollo/client/link/context';
 import Index from 'pages/Index';
 import Page2 from 'pages/Page2';
+import IndexProyectosLider from 'pages/proyectos/IndexLider'
 import IndexCategory1 from 'pages/category1/Index';
 import Category1 from 'pages/category1/CategoryPage1';
 import IndexUsuarios from 'pages/usuarios';
@@ -49,10 +50,12 @@ function App() {
 
   const setToken = (token) => {
     console.log('set token', token);
+    console.log('id', localStorage.getItem('_id'));
     setAuthToken(token);
     if (token) {
       localStorage.setItem('token', JSON.stringify(token));
     } else {
+      localStorage.removeItem('_id');
       localStorage.removeItem('token');
     }
   };
@@ -68,6 +71,8 @@ function App() {
         correo: decoded.correo,
         rol: decoded.rol,
       });
+      localStorage.setItem('_id', decoded._id);
+      console.log('id guardado',localStorage.getItem('id'));
     }
   }, [authToken]);
 
@@ -85,8 +90,8 @@ function App() {
                 <Route path='/proyectos/nuevo' element={<NuevoProyecto />} />
                 <Route path='/inscripciones' element={<IndexInscripciones />} />
                 <Route path='page2' element={<Page2 />} />
-                <Route path='category1' element={<IndexCategory1 />} />
-                <Route path='category1/page1/:_id' element={<Category1 />} />
+                <Route path='category1' element={<IndexProyectosLider />} />
+                <Route path='category1/page1' element={<Category1 />} />
               </Route>
               <Route path='/auth' element={<AuthLayout />}>
                 <Route path='register' element={<Register />} />

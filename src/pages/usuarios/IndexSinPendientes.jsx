@@ -68,4 +68,4 @@ const IndexSinPendientes = () =>{
     );
   };
 
-  export default IndexUsuarios;
+  export default IndexSinPendientes;
