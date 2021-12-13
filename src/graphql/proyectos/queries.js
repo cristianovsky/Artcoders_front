@@ -15,11 +15,6 @@ const PROYECTOS = gql`
         _id
         correo
       }
-      avances {
-        fecha
-        descripcion
-        observaciones
-      }
       inscripciones {
         estado
         estudiante {
@@ -57,5 +52,27 @@ query Query ($lider:String!){
 }
 `;
 
+const PROYECTOS_ESTUDIANTE = gql`
+query ProyectosPorEstudiante($estudiante: String!) {
+  ProyectosPorEstudiante(estudiante: $estudiante) {
+  proyecto {
+    nombre
+    fase
+    fechaInicio
+    fechaFin
+    presupuesto
+    objetivos {
+      descripcion
+    }
+    lider {
+      nombre
+      apellido
+    }
+  } 
+  }
+}
+`;
 
-export { PROYECTOS,PROYECTOS_LIDER};
+
+
+export { PROYECTOS, PROYECTOS_LIDER, PROYECTOS_ESTUDIANTE };

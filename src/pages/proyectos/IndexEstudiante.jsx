@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Enum_Rol, Enum_EstadoUsuario } from 'utils/enums';
 import PrivateRoute from 'components/PrivateRoute';
 import PrivateComponent  from 'components/PrivateComponent';
-import { PROYECTOS_LIDER } from 'graphql/proyectos/queries';
+import { PROYECTOS_ESTUDIANTE } from 'graphql/proyectos/queries';
 import DropDown from 'components/Dropdown';
 import { Dialog } from '@mui/material';
 import { Enum_EstadoProyecto,Enum_FaseProyecto } from 'utils/enums';
@@ -20,31 +20,31 @@ import {
     AccordionDetailsStyled,
   } from 'components/Accordion';
 
-  const IndexProyectosLider = () => {
-    const { data: queryData, loading, error } = useQuery(PROYECTOS_LIDER,{
-      variables: { lider:localStorage.getItem('_id') },
+  const IndexProyectosEstudiante = () => {
+    const { data: queryData, loading, error } = useQuery(PROYECTOS_ESTUDIANTE,{
+      variables: { estudiante:localStorage.getItem('_id') },
     });
 
     useEffect(() => {
-      console.log('datos proyecto', queryData);
+      console.log('datos proyecto3', queryData);
     }, [queryData]);
   
     if (loading) return <div>Cargando...</div>;
   
-    if (queryData.ProyectosPorLider) {
+    if (queryData.ProyectosPorEstudiante) {
       return (
         <div className='p-10 flex flex-col'>
           <div className='flex w-full items-center justify-center'>
             <h1 className='text-2xl font-bold text-gray-900'>Lista de Proyectos</h1>
           </div>
-          <PrivateComponent roleList={['ADMINISTRADOR', 'LIDER']}>
+          <PrivateComponent roleList={'ESTUDIANTE'}>
             <div className='my-2 self-end'>
               <button className='bg-indigo-500 text-gray-50 p-2 rounded-lg shadow-lg hover:bg-indigo-400'>
                 <Link to='/proyectos/nuevo'>Crear nuevo proyecto</Link>
               </button>
             </div>
           </PrivateComponent>
-              {queryData.ProyectosPorLider.map((proyecto) => {
+              {queryData.ProyectosPorEstudiante.map((proyecto) => {
                 return <AccordionProyecto proyecto={proyecto} />;
                 })}
         </div>
@@ -148,14 +148,14 @@ import {
           label='Nombre del proyecto:'
           type='text'
           name='nombre'
-          defaultValue={queryData.ProyectosPorLider.nombre}
+          defaultValue={queryData.ProyectosPorEstudiante.nombre}
           required={true}
         /> 
           <Input
           label='Presupuesto del proyecto:'
           type='number'
           name='nombre'
-          defaultValue={queryData.ProyectosPorLider.nombre}
+          defaultValue={queryData.ProyectosPorEstudiante.nombre}
           required={true}
         />
           <ButtonLoading disabled={false} loading={loading} text='Confirmar' /> 
@@ -189,4 +189,4 @@ import {
       </div>
     );
   };
-export default IndexProyectosLider
+export default IndexProyectosEstudiante

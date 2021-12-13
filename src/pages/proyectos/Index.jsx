@@ -23,7 +23,7 @@ const IndexProyectos = () => {
   const { data: queryData, loading, error } = useQuery(PROYECTOS);
 
   useEffect(() => {
-    console.log('datos proyecto', queryData);
+    console.log('datos proyecto6', queryData);
   }, [queryData]);
 
   if (loading) return <div>Cargando...</div>;
