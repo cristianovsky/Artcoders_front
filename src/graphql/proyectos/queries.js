@@ -42,11 +42,6 @@ query Query ($lider:String!){
       _id
       fecha
       descripcion
-      observaciones
-      creadoPor {
-        nombre
-        apellido
-      }
     }
   }
 }
@@ -69,6 +64,9 @@ query ProyectosPorEstudiante($estudiante: String!) {
     lider {
       nombre
       apellido
+    }
+    avances {
+      descripcion
     }
   } 
   }

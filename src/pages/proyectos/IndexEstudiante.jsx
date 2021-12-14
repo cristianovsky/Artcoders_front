@@ -83,8 +83,8 @@ import { DataStore } from 'apollo-client/data/store';
                 return <Objetivo tipo={objetivo.tipo} descripcion={objetivo.descripcion} />;
               })}
             </div>
-            {/*<div className='flex'>
-            {proyecto.avances === null ? (
+            {<div className='flex'>
+            {proyecto.proyecto.avances === null ? (
             <>
             
             
@@ -94,15 +94,15 @@ import { DataStore } from 'apollo-client/data/store';
            </>
             ):(<>
 
-                {proyecto.avances.map((avance) => {
+                {proyecto.proyecto.avances.map((avance) => {
                   return <Avances observaciones={avance.observaciones} descripcion={avance.descripcion}
-                  creadoPor={avance.creadoPor.nombre+" "+avance.creadoPor.apellido} />;
+                  /*creadoPor={avance.creadoPor.nombre+" "+avance.creadoPor.apellido}*/ />;
                 })}
             
             </>
 
             )}
-              </div>*/}
+              </div>}
           </AccordionDetailsStyled>
         </AccordionStyled>
         <Dialog

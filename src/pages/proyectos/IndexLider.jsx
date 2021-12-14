@@ -62,7 +62,7 @@ import {
           <AccordionSummaryStyled expandIcon={<i className='fas fa-chevron-down' />}>
             <div className='flex w-full justify-between'>
               <div className='uppercase font-bold text-gray-100 '>
-                {proyecto.nombre} - {proyecto.estado} - {proyecto.fase}
+                {proyecto.nombre} - {proyecto.estado} - {proyecto.fase} - {proyecto.avance}
               </div>
             </div>
           </AccordionSummaryStyled>
@@ -81,19 +81,16 @@ import {
               })}
             </div>
             <div className='flex'>
-            {proyecto.avances === null ? (
+            {proyecto.avances === null ? ( 
             <>
-            
-            
-                 <Avances observaciones="avance.observaciones" descripcion="avance.descripcion"
-                  creadoPor="avance.creadoPor.nombr" />;  
-               
-           </>
+              <Avances observaciones="avance.observaciones" descripcion= "avance.descripcion"
+              creadoPor="avance.creadoPor.nombre" />;  
+            </>
             ):(<>
 
                 {proyecto.avances.map((avance) => {
                   return <Avances observaciones={avance.observaciones} descripcion={avance.descripcion}
-                  creadoPor={avance.creadoPor.nombre+" "+avance.creadoPor.apellido} />;
+                  /*creadoPor={avance.creadoPor.nombre+" "+avance.creadoPor.apellido}*/ />;
                 })}
             
             </>
