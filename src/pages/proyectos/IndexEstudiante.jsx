@@ -13,38 +13,41 @@ import ButtonLoading from 'components/ButtonLoading';
 import { EDITAR_PROYECTO } from 'graphql/proyectos/mutations';
 import useFormData from 'hooks/useFormData';
 import Input from 'components/Input';
+import { useUser } from 'context/userContext';
 
 import {
     AccordionStyled,
     AccordionSummaryStyled,
     AccordionDetailsStyled,
   } from 'components/Accordion';
+import { DataStore } from 'apollo-client/data/store';
 
   const IndexProyectosEstudiante = () => {
-    const { data: queryData, loading, error } = useQuery(PROYECTOS_ESTUDIANTE,{
-      variables: { estudiante:localStorage.getItem('_id') },
+    const {userData} = useUser();
+    const { data, loading, error } = useQuery(PROYECTOS_ESTUDIANTE,{
+      variables: { estudiante:userData._id },
     });
 
     useEffect(() => {
-      console.log('datos proyecto3', queryData);
-    }, [queryData]);
+      console.log('datos proyecto3', data);
+    }, [data]);
   
     if (loading) return <div>Cargando...</div>;
   
-    if (queryData.ProyectosPorEstudiante) {
+    if (data.ProyectosPorEstudiante) {
       return (
         <div className='p-10 flex flex-col'>
           <div className='flex w-full items-center justify-center'>
             <h1 className='text-2xl font-bold text-gray-900'>Lista de Proyectos</h1>
           </div>
-          <PrivateComponent roleList={'ESTUDIANTE'}>
+          <PrivateComponent roleList={'LIDER'}>
             <div className='my-2 self-end'>
               <button className='bg-indigo-500 text-gray-50 p-2 rounded-lg shadow-lg hover:bg-indigo-400'>
                 <Link to='/proyectos/nuevo'>Crear nuevo proyecto</Link>
               </button>
             </div>
           </PrivateComponent>
-              {queryData.ProyectosPorEstudiante.map((proyecto) => {
+              {data.ProyectosPorEstudiante.map((proyecto) => {
                 return <AccordionProyecto proyecto={proyecto} />;
                 })}
         </div>
@@ -62,7 +65,7 @@ import {
           <AccordionSummaryStyled expandIcon={<i className='fas fa-chevron-down' />}>
             <div className='flex w-full justify-between'>
               <div className='uppercase font-bold text-gray-100 '>
-                {proyecto.nombre} - {proyecto.estado} - {proyecto.fase}
+                {proyecto.proyecto.nombre} - {proyecto.proyecto.estado} - {proyecto.proyecto.fase}
               </div>
             </div>
           </AccordionSummaryStyled>
@@ -76,11 +79,11 @@ import {
                 />
               </PrivateComponent>
             <div className='flex'>
-              {proyecto.objetivos.map((objetivo) => {
+              {proyecto.proyecto.objetivos.map((objetivo) => {
                 return <Objetivo tipo={objetivo.tipo} descripcion={objetivo.descripcion} />;
               })}
             </div>
-            <div className='flex'>
+            {/*<div className='flex'>
             {proyecto.avances === null ? (
             <>
             
@@ -99,7 +102,7 @@ import {
             </>
 
             )}
-            </div>
+              </div>*/}
           </AccordionDetailsStyled>
         </AccordionStyled>
         <Dialog
@@ -148,14 +151,14 @@ import {
           label='Nombre del proyecto:'
           type='text'
           name='nombre'
-          defaultValue={queryData.ProyectosPorEstudiante.nombre}
+          defaultValue={queryData.ProyectosPorLider.nombre}
           required={true}
         /> 
           <Input
           label='Presupuesto del proyecto:'
           type='number'
           name='nombre'
-          defaultValue={queryData.ProyectosPorEstudiante.nombre}
+          defaultValue={queryData.ProyectosPorLider.nombre}
           required={true}
         />
           <ButtonLoading disabled={false} loading={loading} text='Confirmar' /> 

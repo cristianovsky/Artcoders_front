@@ -56,6 +56,7 @@ const PROYECTOS_ESTUDIANTE = gql`
 query ProyectosPorEstudiante($estudiante: String!) {
   ProyectosPorEstudiante(estudiante: $estudiante) {
   proyecto {
+    _id
     nombre
     fase
     fechaInicio

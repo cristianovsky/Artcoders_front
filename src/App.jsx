@@ -90,7 +90,7 @@ function App() {
                 <Route path='/proyectos' element={<IndexProyectos />} />
                 <Route path='/proyectos/nuevo' element={<NuevoProyecto />} />
                 <Route path='/inscripciones' element={<IndexInscripciones />} />
-                <Route path='/estudiantes' element={<IndexProyectosEstudiante />} />
+                <Route path='/misproyectos' element={<IndexProyectosEstudiante />} />
                 <Route path='category1' element={<IndexProyectosLider />} />
                 <Route path='category1/page1' element={<Category1 />} />
               </Route>
