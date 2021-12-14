@@ -64,6 +64,7 @@ query ProyectosPorEstudiante($estudiante: String!) {
     presupuesto
     objetivos {
       descripcion
+      tipo
     }
     lider {
       nombre
