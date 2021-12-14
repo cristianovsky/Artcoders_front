@@ -25,9 +25,10 @@ import { DataStore } from 'apollo-client/data/store';
   const IndexProyectosEstudiante = () => {
     const {userData} = useUser();
     const { data, loading, error } = useQuery(PROYECTOS_ESTUDIANTE,{
-      variables: { estudiante:userData._id },
+      variables: { estudiante:userData._id }
     });
 
+    console.log('id espia',userData._id)
     useEffect(() => {
       console.log('datos proyecto3', data);
     }, [data]);
@@ -38,7 +39,7 @@ import { DataStore } from 'apollo-client/data/store';
       return (
         <div className='p-10 flex flex-col'>
           <div className='flex w-full items-center justify-center'>
-            <h1 className='text-2xl font-bold text-gray-900'>Lista de Proyectos</h1>
+            <h1 className="text-center text-3xl font-extrabold text-indigo-700">Lista de Proyectos</h1>
           </div>
           <PrivateComponent roleList={'LIDER'}>
             <div className='my-2 self-end'>

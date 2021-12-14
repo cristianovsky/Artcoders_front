@@ -4,13 +4,13 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import { styled } from '@mui/material/styles';
 
 const AccordionStyled = styled((props) => <Accordion {...props} />)(({ theme }) => ({
-  backgroundColor: '#85C27A',
+  backgroundColor: '#F48FB1',
 }));
 const AccordionSummaryStyled = styled((props) => <AccordionSummary {...props} />)(({ theme }) => ({
-  backgroundColor: '#85C27A',
+  backgroundColor: '#F48FB1',
 }));
 const AccordionDetailsStyled = styled((props) => <AccordionDetails {...props} />)(({ theme }) => ({
-  backgroundColor: '#B3F9A6',
+  backgroundColor: '#F48FB1',
 }));
 
 export { AccordionStyled, AccordionSummaryStyled, AccordionDetailsStyled };

@@ -21,7 +21,7 @@ import {
   } from 'components/Accordion';
 
   const IndexProyectosLider = () => {
-    const { data: queryData, loading, error } = useQuery(PROYECTOS_LIDER,{
+    const { data: queryData, loading:queryLoading, error:queryError } = useQuery(PROYECTOS_LIDER,{
       variables: { lider:localStorage.getItem('_id') },
     });
 
@@ -29,17 +29,17 @@ import {
       console.log('datos proyecto', queryData);
     }, [queryData]);
   
-    if (loading) return <div>Cargando...</div>;
+    if (queryLoading) return <div>Cargando...</div>;
   
     if (queryData.ProyectosPorLider) {
       return (
         <div className='p-10 flex flex-col'>
           <div className='flex w-full items-center justify-center'>
-            <h1 className='text-2xl font-bold text-gray-900'>Lista de Proyectos</h1>
+            <h1 className="text-center text-3xl font-extrabold text-indigo-700">Lista de Proyectos</h1>
           </div>
           <PrivateComponent roleList={['ADMINISTRADOR', 'LIDER']}>
             <div className='my-2 self-end'>
-              <button className='bg-indigo-500 text-gray-50 p-2 rounded-lg shadow-lg hover:bg-indigo-400'>
+              <button className='bg-pink-400 text-gray-50 p-2 rounded-lg shadow-lg hover:bg-pink-200'>
                 <Link to='/proyectos/nuevo'>Crear nuevo proyecto</Link>
               </button>
             </div>
@@ -111,13 +111,14 @@ import {
     );
   };
 
-  const FormEditProyecto = ({ _id,queryData }) => {
+  const FormEditProyecto = ({ _id,queryData,queryError,queryLoading }) => {
     const { form, formData, updateFormData } = useFormData();
     
-    const [editarProyecto, { data: dataMutation, loading, error }] = useMutation(EDITAR_PROYECTO);
+    const [editarProyecto, { data: dataMutation, loading, error:mutationError }] = useMutation(EDITAR_PROYECTO);
   
     const submitForm = (e) => {
       e.preventDefault();
+      formData.presupuesto = parseFloat(formData.presupuesto);
       editarProyecto({
         variables: {
           _id,
@@ -132,6 +133,23 @@ import {
       console.log('data mutation', dataMutation);
     }, [dataMutation]);
   
+    useEffect(() => {
+      if (dataMutation) {
+        toast.success('Proyecto modificado correctamente');
+      }
+    }, [dataMutation]);
+  
+    useEffect(() => {
+      if (mutationError) {
+        toast.error('Error modificando el proyecto');
+      }
+  
+      if (queryError) {
+        toast.error('Error consultando el proyecto');
+      }
+    }, [queryError, mutationError]);
+
+    if (queryLoading) return <div>Cargando....</div>;
     return (
       <div className='p-4'>
       <h1 className='font-bold'>Modificar informacion del Proyecto</h1>
@@ -145,14 +163,14 @@ import {
           label='Nombre del proyecto:'
           type='text'
           name='nombre'
-          defaultValue={queryData.ProyectosPorLider.nombre}
+          //defaultValue={queryData.ProyectosPorLider.nombre}
           required={true}
         /> 
           <Input
           label='Presupuesto del proyecto:'
           type='number'
-          name='nombre'
-          defaultValue={queryData.ProyectosPorLider.nombre}
+          name='presupuesto'
+          //defaultValue={queryData.ProyectosPorLider.nombre}
           required={true}
         />
           <ButtonLoading disabled={false} loading={loading} text='Confirmar' /> 

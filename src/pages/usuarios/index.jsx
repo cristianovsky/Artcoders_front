@@ -70,7 +70,7 @@ const { data, error, loading } = useQuery((userData.rol ==='ADMINISTRADOR')?GET_
                       <td>{Enum_EstadoUsuario[u.estado]}</td>
                       <td>
                         <Link to={`/usuarios/editar/${u._id}`}>
-                        <button class="h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800">Edit</button>
+                        <button class="h-8 px-4 m-2 text-sm text-indigo-100 transition-colors duration-150 bg-indigo-700 rounded-lg focus:shadow-outline hover:bg-indigo-800">{<i class="fas fa-edit"></i>}</button>
                         </Link>
                       </td>
                     </tr>

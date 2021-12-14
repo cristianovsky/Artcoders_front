@@ -14,9 +14,6 @@ const SidebarLinks = () => {
       <PrivateComponent roleList={['ADMINISTRADOR', 'LIDER']}>
         <SidebarRoute to='/inscripciones' title='Aprobacion Inscripciones' icon='fas fa-user' />
       </PrivateComponent >
-      <PrivateComponent roleList={['ESTUDIANTE']}>
-      <SidebarRoute to='/page2' title='Pagina2' icon='fas fa-smile-wink' />
-      </PrivateComponent>
       <PrivateComponent roleList={['LIDER','ESTUDIANTE']}>
         <SidebarRoute to='/misProyectos' title='Mis proyectos' icon='fas fa-tasks' />
       </PrivateComponent>
@@ -48,7 +45,7 @@ const Logo = () => {
   return (
     <div className='py-3 w-full flex flex-col items-center justify-center'>
       <img src='logo.png' alt='Logo' className='h-16' />
-      <span className='my-2 text-xl font-bold text-center'></span>
+      <span className='my-2 text-4xl font-bold text-center text-indigo-700'>ARTCODERS</span>
     </div>
   );
 };
@@ -98,8 +95,8 @@ const SidebarRoute = ({ to, title, icon }) => {
         to={to}
         className={({ isActive }) =>
           isActive
-            ? 'sidebar-route text-white bg-indigo-700'
-            : 'sidebar-route text-gray-900 hover:text-white hover:bg-indigo-400'
+            ? 'sidebar-route text-white bg-pink-400 border-2'
+            : 'sidebar-route text-gray-900 font-medium hover:text-white hover:bg-pink-200'
         }
       >
         <div className='flex items-center'>
