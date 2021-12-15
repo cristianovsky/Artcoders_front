@@ -195,7 +195,8 @@ import {
   const Avances = ({  descripcion,observaciones, creadoPor }) => {
     return (
       <div className='mx-5 my-4 bg-gray-50 p-8 rounded-lg flex flex-col items-center justify-center shadow-xl'>
-        <div className='text-lg font-bold'>{creadoPor}</div>
+        <div className='text-lg font-bold'>AVANCES</div>
+        <div>{creadoPor}</div>
         <div>{descripcion}</div>
         <div>{observaciones}</div>
         <PrivateComponent roleList={['ADMINISTRADOR']}>

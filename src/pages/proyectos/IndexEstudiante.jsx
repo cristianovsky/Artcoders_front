@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery, ApolloError } from '@apollo/client';
 import { toast } from 'react-toastify';
+import { GET_USUARIOS } from 'graphql/usuarios/queries';
+import { CREAR_AVANCE } from 'graphql/proyectos/mutations';
 import { Link } from 'react-router-dom';
 import { Enum_Rol, Enum_EstadoUsuario } from 'utils/enums';
 import PrivateRoute from 'components/PrivateRoute';
@@ -8,9 +10,7 @@ import PrivateComponent  from 'components/PrivateComponent';
 import { PROYECTOS_ESTUDIANTE } from 'graphql/proyectos/queries';
 import DropDown from 'components/Dropdown';
 import { Dialog } from '@mui/material';
-import { Enum_EstadoProyecto,Enum_FaseProyecto } from 'utils/enums';
 import ButtonLoading from 'components/ButtonLoading';
-import { EDITAR_PROYECTO } from 'graphql/proyectos/mutations';
 import useFormData from 'hooks/useFormData';
 import Input from 'components/Input';
 import { useUser } from 'context/userContext';
@@ -22,6 +22,7 @@ import {
   } from 'components/Accordion';
 import { DataStore } from 'apollo-client/data/store';
 
+
   const IndexProyectosEstudiante = () => {
     const {userData} = useUser();
     const { data, loading, error } = useQuery(PROYECTOS_ESTUDIANTE,{
@@ -29,6 +30,7 @@ import { DataStore } from 'apollo-client/data/store';
     });
 
     console.log('id espia',userData._id)
+
     useEffect(() => {
       console.log('datos proyecto3', data);
     }, [data]);
@@ -44,7 +46,7 @@ import { DataStore } from 'apollo-client/data/store';
           <PrivateComponent roleList={'LIDER'}>
             <div className='my-2 self-end'>
               <button className='bg-indigo-500 text-gray-50 p-2 rounded-lg shadow-lg hover:bg-indigo-400'>
-                <Link to='/proyectos/nuevo'>Crear nuevo proyecto</Link>
+                <Link to='/proyectos/Avances'>Crear Avance</Link>
               </button>
             </div>
           </PrivateComponent>
@@ -71,7 +73,7 @@ import { DataStore } from 'apollo-client/data/store';
             </div>
           </AccordionSummaryStyled>
           <AccordionDetailsStyled>
-            <PrivateComponent roleList={['ADMINISTRADOR','LIDER']}>
+            <PrivateComponent roleList={['ADMINISTRADOR','LIDER','ESTUDIANTE']}>
               <i
                 className='mx-4 fas fa-pen text-yellow-600 hover:text-yellow-400'
                 onClick={() => {
@@ -112,60 +114,79 @@ import { DataStore } from 'apollo-client/data/store';
           setShowDialog(false);
         }}
       >
-        <FormEditProyecto _id={proyecto._id} />
+        <FormEditProyecto proyecto_id={proyecto.proyecto._id} />
       </Dialog>
       </>
     );
   };
 
-  const FormEditProyecto = ({ _id,queryData }) => {
+  const FormEditProyecto = ({ proyecto_id,queryData,creadoPor }) => {
     const { form, formData, updateFormData } = useFormData();
+    const {userData} = useUser();
+    const [listaUsuarios, setListaUsuarios] = useState({});
     
-    const [editarProyecto, { data: dataMutation, loading, error }] = useMutation(EDITAR_PROYECTO);
-  
-    const submitForm = (e) => {
-      e.preventDefault();
-      editarProyecto({
+    const { dataUsuarios, loading:queryLoading, error:queryError } = useQuery(GET_USUARIOS, {
+      variables: {
+        filtro: { rol: 'ESTUDIANTE', estado: 'AUTORIZADO' },
+      },
+    });
+
+    console.log("creado por: ",userData._id)
+    console.log("proyecto id: ",proyecto_id)
+
+    const [crearAvance, { data: mutationData, loading: mutationLoading, error: mutationError }] =
+      useMutation(CREAR_AVANCE,{
         variables: {
-          _id,
-          campos:formData,
-        },
-      });
-      console.log(formData)
-    };
+        creadoPor:userData._id,
+        proyecto:proyecto_id,
+    },
+    });
   
   
     useEffect(() => {
-      console.log('data mutation', dataMutation);
-    }, [dataMutation]);
+      console.log('data mutation', mutationData);
+    });
+  
+    const submitForm = (e) => {
+      e.preventDefault();
+  
+      crearAvance({
+        variables: formData,
+      });
+    };
+  
+    useEffect(() => {
+      if (mutationData) {
+        toast.success('avance agregado correctamente');
+      }
+    }, [mutationData]);
+  
+    useEffect(() => {
+      if (mutationError) {
+        toast.error('Error agregandoo avance');
+      }
+  
+      if (queryError) {
+        toast.error('Error consultando el Usuario');
+      }
+    }, [queryError, mutationError]);
+
+    if (queryLoading) return <div>Cargando....</div>;
   
     return (
-      <div className='p-4'>
-      <h1 className='font-bold'>Modificar informacion del Proyecto</h1>
-        <form
-          ref={form}
-          onChange={updateFormData}
-          onSubmit={submitForm}
-          className='flex flex-col items-center'
-        >
-           <Input
-          label='Nombre del proyecto:'
-          type='text'
-          name='nombre'
-          defaultValue={queryData.ProyectosPorLider.nombre}
-          required={true}
-        /> 
-          <Input
-          label='Presupuesto del proyecto:'
-          type='number'
-          name='nombre'
-          defaultValue={queryData.ProyectosPorLider.nombre}
-          required={true}
-        />
-          <ButtonLoading disabled={false} loading={loading} text='Confirmar' /> 
+      <div className='p-10 flex flex-col items-center'>
+        <div className='self-start'>
+          <Link to='/proyectos'>
+            <i className='fas fa-arrow-left' />
+          </Link>
+        </div>
+        <h1 className='text-2xl font-bold text-gray-900'>Crear Nuevo Avance</h1>
+        <form ref={form} onChange={updateFormData} onSubmit={submitForm}>
+          <Input name='descripcion' label='Descripcion del avance' required={true} type='text' />
+          <Input name='fecha' label='Fecha de Inicio' required={true} type='date' />
+          <ButtonLoading text='Crear Avance' loading={false} disabled={false} />
         </form>
       </div>
-    
     );
   };
 
