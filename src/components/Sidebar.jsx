@@ -17,7 +17,7 @@ const SidebarLinks = () => {
       <PrivateComponent roleList={['LIDER','ESTUDIANTE']}>
         <SidebarRoute to='/misProyectos' title='Mis proyectos' icon='fas fa-tasks' />
       </PrivateComponent>
-      <SidebarRoute to='/category1/Index' title='AVANCES' icon="fas fa-address-book" />
+      {/*<SidebarRoute to='/category1/Index' title='AVANCES' icon="fas fa-address-book" />*/}
       <Logout />
     </ul>
   );
