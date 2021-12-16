@@ -103,7 +103,7 @@ const AccordionProyecto = ({ proyecto }) => {
 const FormEditProyecto = ({ _id }) => {
   const { form, formData, updateFormData } = useFormData();
   
-  const [editarProyecto, { data: dataMutation, loading, error }] = useMutation(EDITAR_PROYECTO);
+  const [editarProyecto, { data: dataMutation, loading:mutationLoading, error:mutationError }] = useMutation(EDITAR_PROYECTO);
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -121,6 +121,20 @@ const FormEditProyecto = ({ _id }) => {
     console.log('data mutation', dataMutation);
   }, [dataMutation]);
 
+  useEffect(() => {
+    if (dataMutation) {
+      toast.success('proyecto modificado correctamente');
+    }
+  }, [dataMutation]);
+
+  useEffect(() => {
+    if (mutationError) {
+      toast.error('Error modificando el proyecto');
+    }
+  }, [ mutationError]);
+
+  if (mutationLoading) return <div>Cargando....</div>;
+
   return (
     <div className='p-4'>
     <h1 className='font-bold'>Modificar Estado del Proyecto</h1>
@@ -132,7 +146,7 @@ const FormEditProyecto = ({ _id }) => {
       >
         <DropDown label='Estado del Proyecto' name='estado' options={Enum_EstadoProyecto} /> 
         <DropDown label='Fase del Proyecto' name='fase' options={Enum_FaseProyecto} /> 
-        <ButtonLoading disabled={false} loading={loading} text='Confirmar' /> 
+        <ButtonLoading disabled={false} loading={mutationLoading} text='Confirmar' /> 
       </form>
     </div>
   
