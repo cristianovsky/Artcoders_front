@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Input from 'components/Input';
 import ButtonLoading from 'components/ButtonLoading';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { setToken } = useAuth();
   const { form, formData, updateFormData } = useFormData();
+const [loginIncorrecto, setLoginIncorrecto] = useState('');
 
   const [login, { data: dataMutation, loading: mutationLoading, error: mutationError }] =
     useMutation(LOGIN);
@@ -26,7 +27,11 @@ const Login = () => {
 
   useEffect(() => {
     if (dataMutation) {
-      if (dataMutation.login.token) {
+      if (dataMutation.login === null) {
+        setLoginIncorrecto('Usuario o contraseña Invalido');
+        navigate('');
+      }
+      else if (dataMutation.login.token) {
         setToken(dataMutation.login.token);
         navigate('/');
       }
@@ -47,6 +52,7 @@ const Login = () => {
         />
       </form>
       <span>¿No tienes cuenta?</span>
+      <span className='text-red-700'>{loginIncorrecto}</span>
       <Link to='/auth/register'>
         <span className='text-blue-700'>Regístrate</span>
       </Link>
