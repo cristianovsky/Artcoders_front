@@ -102,7 +102,7 @@ const SidebarRoute = ({ to, title, icon }) => {
             : 'sidebar-route text-gray-900 hover:text-white hover:bg-indigo-400'
         }
       >
-        <div className='flex items-center'>
+        <div className='flex items-center'> {/* comentario */}
           <i className={icon} />
           <span className='text-sm  ml-2'>{title}</span>
         </div>
