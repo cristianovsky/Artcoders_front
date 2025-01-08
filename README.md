@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Artcoders_front
 =======
 # Boilerplate para el proyecto de Misión TIC - Ciclo 4 UdeA 2021
@@ -16,4 +15,4 @@ Paso 2: navegar hacia la carpeta e instalar dependencias
 Paso 3: ejecutar el proyecto
 
 `yarn start`
->>>>>>> b7411ee (initial commit)
+
